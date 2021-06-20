@@ -68,14 +68,14 @@ def modulations():
         print(f"Error rate: {error_rate}%")
 
 
-def modulations_testing():
-    with open('config.ini') as f:
+def modulations_testing(filename):
+    with open(filename) as f:
         data = f.read().split('\n')
         r = open("results.csv", "w")
-        r.write("Modulation:;Orders:;Amplitudes:;Input size:;SNR:;BER [%]:;SER [%]:\n")
+        r.write("Modulation:
         for line in data:
             if line.__len__() > 0:
-                line = line.split(';')[0].strip()
+                line = line.split('
                 arguments = line.split(' ')
                 input_len = int(arguments[1])
                 inputs = [random.choice([0, 1]) for _ in range(input_len)]
@@ -92,21 +92,21 @@ def modulations_testing():
                     else:
                         modulation = komm.APSKModulation(orders, amplitudes)
                     print("------------APSK-modulation------------")
-                    r.write("APSK;")
+                    r.write("APSK
                 elif arguments[0] == 'ASK':
                     orders = int(arguments[3])
                     symbol_len = math.log(orders, 2)
                     amplitudes = float(arguments[4])
                     modulation = komm.ASKModulation(orders, amplitudes)
                     print("------------ASK-modulation------------")
-                    r.write("ASK;")
+                    r.write("ASK
                 elif arguments[0] == 'PSK':
                     orders = int(arguments[3])
                     symbol_len = math.log(orders, 2)
                     amplitudes = float(arguments[4])
                     modulation = komm.PSKModulation(orders, amplitudes)
                     print("------------PSK-modulation------------")
-                    r.write("PSK;")
+                    r.write("PSK
                 else:
                     continue
                 err_sum = 0.0
@@ -148,7 +148,7 @@ def modulations_testing():
                 print(f"Signal to noise ratio: {arguments[2]}")
                 print(f"Bit error rate: {round_half_up(error_rate, 2)}%")
                 print(f"Symbol error rate: {round_half_up(symbol_error_rate, 2)}%")
-                r.write(f"{orders};{amplitudes};{input_len};{arguments[2]};{round_half_up(error_rate, 2)};{round_half_up(symbol_error_rate, 2)}\n")
+                r.write(f"{orders}
     # plt.show()
     f.close()
     r.close()
@@ -162,7 +162,7 @@ def modulations_testing():
 #
 #     M = 2  # Number of points in BPSK constellation
 #     m = np.arange(0, M)  # all possible input symbols
-#     A = 1;  # amplitude
+#     A = 1
 #     constellation = A * np.cos(m / M * 2 * np.pi)  # reference constellation for BPSK
 #
 #     # ------------ Transmitter---------------
@@ -199,5 +199,10 @@ def modulations_testing():
 #     plt.show()
 
 
-modulations_testing()
+if __name__ == '__main__':
+    if len(sys.argv) < 2:
+        print('Path to config file not provided!')
+        print('Usage: python main.py config.ini')
+        sys.exit()
+    modulations_testing(sys.argv[1])
 # TEST()
